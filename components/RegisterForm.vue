@@ -1,9 +1,18 @@
 <template>
-     <v-form
+        <v-form
         ref="form"
         v-model="valid"
         lazy-validation
         >
+        <v-text-field
+            v-model="name"
+            label="Name"
+            name="name"
+            prepend-icon="mdi-name"
+            type="name"
+            :rules="nameRules"
+            required
+        ></v-text-field>
         <v-text-field
             v-model="email"
             label="Email"
@@ -24,11 +33,22 @@
             counter:true
             required
         ></v-text-field>
+        <v-text-field
+            v-model="confirmPassword"
+            label="Confirm Password"
+            prepend-icon="mdi-lock"
+            :type="showPassword ? 'text' : 'password'"
+            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            @click:append="showPassword = !showPassword"
+            :rules="passwordRules.concat(passwordConfirmationRule)"
+            counter:true
+            required
+        ></v-text-field>
         <v-btn
             :disabled="!valid"
             color="success"
             class="mr-4"
-            @click="submitForm([email, password])"
+            @click="submitForm([name, email, password])"
         >Login</v-btn>
         <v-btn 
         color="error" dark
@@ -40,6 +60,7 @@
 
 <script>
 import AlertFormIncorrect from '@/components/AlertFormIncorrect.vue';
+import { computed } from 'vue';
     export default {
         components: {
             AlertFormIncorrect
@@ -58,14 +79,13 @@ import AlertFormIncorrect from '@/components/AlertFormIncorrect.vue';
                     v => !!v || 'Password is required',
                     v => (v && v.length >= 8) || 'Password must be more than 8 characters',
                 ],
+                name: '',
+                nameRules: [
+                    v => !!v || 'Name is required',
+                    v => (v && v.length >= 3) || 'Name must be more than 3 characters',
+                ],
+                confirmPassword: '',
         }),
-
-        props: {
-            submitForm: {
-                type: Function,
-                required: true
-            }
-        },
 
         methods: {
             reset() {
@@ -79,7 +99,15 @@ import AlertFormIncorrect from '@/components/AlertFormIncorrect.vue';
                     this.showAlertIncorrect = true;
                 }   
             }   
+        },
+
+        computed: {
+            passwordConfirmationRule() {
+                return () =>
+                this.password === this.confirmPassword || "Password must match";
+            }
         }
+        
     }
 </script>
 
