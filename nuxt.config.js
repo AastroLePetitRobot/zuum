@@ -41,7 +41,8 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/axios',
-    '@nuxtjs/auth-next'
+    '@nuxtjs/auth-next',
+    '~/io'
     ],
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
@@ -90,7 +91,14 @@ export default {
   serverMiddleware: {
     '/api': '~/api'
   },
+
+  env: {
+    URL: 'http://localhost:3000'
+  },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    transpile: [
+      'defu'
+    ]
   }
 }
