@@ -28,7 +28,7 @@
             :disabled="!valid"
             color="success"
             class="mr-4"
-            @click="submitForm([email, password])"
+            @click="submitForm({email: email, password: password})"
         >Login</v-btn>
         <v-btn 
         color="error" dark

@@ -15,11 +15,11 @@ export default {
         LoginUser(loginInfo) {
             this.$auth.loginWith('local', {
                 data: {
-                    email: loginInfo[0],
-                    password: loginInfo[1]
+                    email: loginInfo.email,
+                    password: loginInfo.password    
                 }
             });
-            console.log(loginInfo);
+            console.log(loginInfo.email);
         }
     }
 
