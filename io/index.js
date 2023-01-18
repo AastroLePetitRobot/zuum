@@ -12,27 +12,36 @@ export default function () {
     this.nuxt.hook('close', () => new Promise(server.close))
 
     // Add socket.io events
-    const messages = []
-    console.log("socketio xd")
+    //console.log("socketio xd")
     io.of("/rooms").on('connection', (socket) => {
-      console.log("Connected")
+      // console.log("Connected")
 
       socket.on('joinRoom', (args) => {
-        console.log("Join route event")
+        //console.log("Join route event")
         //console.log(args)
         let room = "room-"+args.roomId
-        console.log(room)
+        // console.log(room)
         socket.join(room)
       })
 
       socket.on("loadFile", (args) => {
-        console.log("loadFild Event")
-        //console.log(socket)
-        console.log(args)
+        // console.log("loadFild Event")
+        // console.log(socket)
+        // console.log(args)
         let room = "room-"+args.roomId
-        console.log(room)
+        // console.log(room)
         //io.of("/rooms").in(args.id).emit('openPage', args)
         io.of("/rooms").to(room).emit('openPage', args)
+      })
+
+      socket.on("deleteFile", (args) => {
+        // console.log("loadFild Event")
+        // console.log(socket)
+        // console.log(args)
+        let room = "room-"+args.roomId
+        // console.log(room)
+        //io.of("/rooms").in(args.id).emit('openPage', args)
+        io.of("/rooms").to(room).emit('refreshPage')
       })
     })
   })
