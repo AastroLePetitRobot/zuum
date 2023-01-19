@@ -1,3 +1,5 @@
+const AZ_CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=sideproject01;AccountKey=PiY6VHA70RaHO/Xuf9in1Y8FQAONuq1WSHL894fV50i6VwMQ75AHRo4Hep1gfF7eY/ckAHrf8WYc+AStCAySWg==;EndpointSuffix=core.windows.net"
+
 const express = require('express');
 var router = express.Router();
 
@@ -33,13 +35,49 @@ router.post('/rooms/items/delete', async function(req, res) {
     res.status(200).send("Update complete");
 });
 
-router.post('/rooms/items/add', async function(req, res) {
-    let roomId = req.query.roomId;
-    let newItem = req.query.newItem;
-    
-    await client.db(database).collection("rooms").updateMany({roomId: roomId}, {$push: {items: newItem}}); 
+router.post('/rooms/items/add', upload.single('file'), async function (req, res) {
+    try {
+        console.log(req.body);
 
-    res.status(200).send("Update complete");
+        const blobName = req.body.displayName;
+        const roomId = req.body.roomId;
+
+        let newfile = {};
+
+        if (req.body.fileType == 'file') {
+
+            const file = req.file;
+
+            const blobServiceClient = BlobServiceClient.fromConnectionString(AZ_CONNECTION_STRING);
+
+            const containerClient = blobServiceClient.getContainerClient("zuum")
+
+            const blockBlobClient = containerClient.getBlockBlobClient(file.originalname);
+
+            blockBlobClient.uploadFile(file.path);
+
+            console.log(`Blob was uploaded successfully`);
+
+            //await fs.unlink(file.path)
+
+            newfile = { displayName: blobName, url: blockBlobClient.url }
+        }
+
+        else if (req.body.fileType == 'url') {
+            newfile = { displayName: blobName, url: req.body.url}
+        }
+
+        console.log(newfile)
+
+        let result = await client.db(database).collection("rooms").updateMany({ roomId: roomId }, { $push: { items: newfile } }, {upsert: true});
+
+        console.log(result)
+
+        res.status(200).send("Update complete");
+    } catch (error) {
+        console.log(error)
+        res.status(500).send()
+    }
 });
 
 module.exports = router;
