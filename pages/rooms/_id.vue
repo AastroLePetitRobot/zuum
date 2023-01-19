@@ -71,6 +71,7 @@
 import socket from '~/plugins/socket.io.js'
 
 export default {
+	middleware: ['auth-user'],
 	data() {
 		return {
 			items: [],

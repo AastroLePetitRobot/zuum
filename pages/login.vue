@@ -11,6 +11,7 @@ export default {
     components: {
         AuthForm
     },
+    
     methods: {
         LoginUser(loginInfo) {
             this.$auth.loginWith('local', {
