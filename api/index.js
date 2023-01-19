@@ -1,13 +1,16 @@
 const express = require('express')
-const routes = require('./routes/index.js')
+const register = require('./routes/register.js')
 const rooms = require('./routes/rooms.js')
+var cookieParser = require('cookie-parser');
+
 const app = express()
 
 var multer = require('multer')
 
 app.use(express.json({ limit: '100mb' }))
 app.use(express.urlencoded({ extended: false }))
-app.use(routes)
+app.use(register)
+app.use(cookieParser());
 app.use(rooms)
 export default {
   path: '/api',

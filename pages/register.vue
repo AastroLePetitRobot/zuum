@@ -1,3 +1,4 @@
+
 <template>
     <v-container>
         <h1>Register</h1>
@@ -7,23 +8,25 @@
 
 <script>
 import RegisterForm from '@/components/RegisterForm.vue';
+
 export default {
     components: {
         RegisterForm
     },
 
     methods: {
-        registerUser(registerInfo) {
-            this.$auth.registerStrategy('local', {
-                data: {
-                    name: registerInfo.name,
-                    email: registerInfo.email,
-                    password: registerInfo.password
+        async registerUser(registerInfo) {
+            try {
+                const name = registerInfo.name;
+                const email = registerInfo.email;
+                const password = registerInfo.password;
+                const response = await this.$axios.post('/register', { name, email, password });
+                console.log(response.data);
+                } catch (error) {
+                console.log(error);
                 }
-            });
-            console.log('test');
-        }   
-    }
+            }
+     }
 }
 </script>
 

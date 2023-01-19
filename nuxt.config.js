@@ -42,7 +42,8 @@ export default {
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/auth-next',
-    '~/io'
+    '~/io',
+    'cookie-universal-nuxt',
     ],
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
@@ -73,7 +74,7 @@ export default {
           property: 'token',
           global: true,
           // required: true,
-          // type: 'Bearer'
+          type: ''
         },
         user: {
           property: 'user',
@@ -83,7 +84,6 @@ export default {
           login: { url: '/auth/login', method: 'post', propertyName: 'token'},
           logout: { url: '/auth/logout', method: 'post' },
           user: { url: '/auth/user', method: 'get', propertyName: 'user'},
-          register: { url: '/auth/register', method: 'post'}
         }
       }
     }
