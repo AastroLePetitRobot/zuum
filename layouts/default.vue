@@ -2,7 +2,7 @@
   <v-app>
   <v-app-bar app>
     <v-btn text nuxt to="/">Home</v-btn>
-    <v-btn text nuxt to="/room">Room</v-btn>
+    <v-btn text nuxt to="/rooms/1">Room</v-btn>
     <v-spacer></v-spacer>
     <div v-if="!$auth.loggedIn">
       <v-btn text nuxt to="/login">login</v-btn>

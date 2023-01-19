@@ -3,7 +3,8 @@ const routes = require('./routes/index.js')
 const rooms = require('./routes/rooms.js')
 const app = express()
 
-var multer = require('multer')
+
+app.use(express.static('public'))
 
 app.use(express.json({ limit: '100mb' }))
 app.use(express.urlencoded({ extended: false }))

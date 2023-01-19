@@ -25,22 +25,15 @@ export default function () {
       })
 
       socket.on("loadFile", (args) => {
-        // console.log("loadFild Event")
-        // console.log(socket)
-        // console.log(args)
+
         let room = "room-"+args.roomId
-        // console.log(room)
-        //io.of("/rooms").in(args.id).emit('openPage', args)
         io.of("/rooms").to(room).emit('openPage', args)
       })
 
-      socket.on("deleteFile", (args) => {
-        // console.log("loadFild Event")
-        // console.log(socket)
-        // console.log(args)
+      socket.on("refresh", (args) => {
+
         let room = "room-"+args.roomId
-        // console.log(room)
-        //io.of("/rooms").in(args.id).emit('openPage', args)
+
         io.of("/rooms").to(room).emit('refreshPage')
       })
     })
