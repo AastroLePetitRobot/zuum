@@ -78,7 +78,6 @@
 
 <script>
 export default {
-  middleware: ['auth-user'],
   name: 'IndexPage'
 }
 </script>

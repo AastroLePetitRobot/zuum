@@ -11,23 +11,29 @@ const url = "mongodb://localhost:27017"
 
 router.post ('/auth/login', async (req, res) => {
     try {
+    console.log(req.body)
     const { email, password } = req.body;
     const db = client.db('zuum');
     const usersCollection = db.collection('users');
     const user = await usersCollection.findOne({ email: email });
 
+    console.log(user)
+
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
     const match = await bcrypt.compare(password, user.password);
+
+    console.log(match)
+    
     if (!match) {
       return res.status(401).json({ error: 'Incorrect password' });
     }
-    const token = jwt.sign({ email },
-    'secret', { expiresIn: '1h' });
-    res.cookie('token', token, { httpOnly: true });
-    res.json({ token });
-    res.json({ message: 'Login successful' });
+    const token = jwt.sign({ email }, 'secret', { expiresIn: '1h' });
+
+    console.log(token)
+    
+    res.status(200).send({ message: 'Login successful', token: token });
     client.close();
     }
     catch(err){

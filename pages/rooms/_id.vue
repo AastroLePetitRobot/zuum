@@ -71,7 +71,6 @@
 import socket from '~/plugins/socket.io.js'
 
 export default {
-	middleware: ['auth-user'],
 	data() {
 		return {
 			items: [],
@@ -81,6 +80,7 @@ export default {
 	},
 
 	created() {
+		console.log(this.$auth)
 		this.roomId = this.$route.params.id
 		console.log(this.roomId)
 		this.getDataFromApi();

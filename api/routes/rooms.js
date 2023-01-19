@@ -1,36 +1,38 @@
-const AZ_CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=sideproject01;AccountKey=PiY6VHA70RaHO/Xuf9in1Y8FQAONuq1WSHL894fV50i6VwMQ75AHRo4Hep1gfF7eY/ckAHrf8WYc+AStCAySWg==;EndpointSuffix=core.windows.net"
-
 const express = require('express');
+const multer = require('multer');
+const { BlobServiceClient } = require("@azure/storage-blob");
+const fs = require("fs");
 var router = express.Router();
+var upload = multer({ dest: "uploads/" });
 
 const client = require('../database/db');
 const database = process.env.MAIN_DATABASE || 'zuum';
 
 
 /* GET users listing. */
-router.get('/rooms', async function(req, res) {
+router.get('/rooms', async function (req, res) {
 
     try {
-    console.log("room")
-    let query = req.query;
+        console.log("room")
+        let query = req.query;
 
-    let fileList = await client.db(database).collection("rooms").find({roomId: query.roomId}).toArray();
-    
-    console.log(fileList)
-    
-    res.json(fileList);
-} catch (error) { console.log(error)}
+        let fileList = await client.db(database).collection("rooms").find({ roomId: query.roomId }).toArray();
+
+        console.log(fileList)
+
+        res.json(fileList);
+    } catch (error) { console.log(error) }
 
 });
 
-router.post('/rooms/items/delete', async function(req, res) {
+router.post('/rooms/items/delete', async function (req, res) {
     let roomId = req.body.roomId;
     let newlist = req.body.newList;
 
     console.log(req.body)
     console.log(newlist)
-    
-    await client.db(database).collection("rooms").updateMany({roomId: roomId}, {$set: {items: newlist}}); 
+
+    await client.db(database).collection("rooms").updateMany({ roomId: roomId }, { $set: { items: newlist } });
 
     res.status(200).send("Update complete");
 });
@@ -48,7 +50,7 @@ router.post('/rooms/items/add', upload.single('file'), async function (req, res)
 
             const file = req.file;
 
-            const blobServiceClient = BlobServiceClient.fromConnectionString(AZ_CONNECTION_STRING);
+            const blobServiceClient = BlobServiceClient.fromConnectionString("DefaultEndpointsProtocol=https;AccountName=sideproject01;AccountKey=PiY6VHA70RaHO/Xuf9in1Y8FQAONuq1WSHL894fV50i6VwMQ75AHRo4Hep1gfF7eY/ckAHrf8WYc+AStCAySWg==;EndpointSuffix=core.windows.net");
 
             const containerClient = blobServiceClient.getContainerClient("zuum")
 
@@ -57,8 +59,6 @@ router.post('/rooms/items/add', upload.single('file'), async function (req, res)
             blockBlobClient.uploadFile(file.path);
 
             console.log(`Blob was uploaded successfully`);
-
-            //await fs.unlink(file.path)
 
             newfile = { displayName: blobName, url: blockBlobClient.url }
         }
@@ -69,7 +69,7 @@ router.post('/rooms/items/add', upload.single('file'), async function (req, res)
 
         console.log(newfile)
 
-        let result = await client.db(database).collection("rooms").updateMany({ roomId: roomId }, { $push: { items: newfile } }, {upsert: true});
+        let result = await client.db(database).collection("rooms").updateMany({ roomId: roomId }, { $push: { items: newfile } });
 
         console.log(result)
 

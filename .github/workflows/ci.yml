@@ -1,52 +1,90 @@
-name: ci
+# name: cicd
 
-on:
-  push:
-    branches:
-      - main
-      - master
-  pull_request:
-    branches:
-      - main
-      - master
+# on:
+#   push:
+#     branches:
+#       - main
+#       - master
+#   pull_request:
+#     branches:
+#       - main
+#       - master
 
-jobs:
-  ci:
-    runs-on: ${{ matrix.os }}
+# jobs:
+#   ci:
+#     runs-on: ${{ matrix.os }}
 
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        node: [lts/*]
+#     strategy:
+#       matrix:
+#         os: [ubuntu-latest]
+#         node: [lts/*]
 
-    steps:
-      - name: Checkout 🛎
-        uses: actions/checkout@master
+#     steps:
+#       - name: Checkout 🛎
+#         uses: actions/checkout@master
 
-      - name: Setup node env 🏗
-        uses: actions/setup-node@v3.0.0
-        with:
-          node-version: ${{ matrix.node }}
-          check-latest: true
+#       - name: Setup node env 🏗
+#         uses: actions/setup-node@v3.0.0
+#         with:
+#           node-version: ${{ matrix.node }}
+#           check-latest: true
 
-      - name: Get yarn cache directory path 🛠
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+#       - name: Get yarn cache directory path 🛠
+#         id: yarn-cache-dir-path
+#         run: echo "::set-output name=dir::$(yarn cache dir)"
 
-      - name: Cache node_modules 📦
-        uses: actions/cache@v2.1.7
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+#       - name: Cache node_modules 📦
+#         uses: actions/cache@v2.1.7
+#         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+#         with:
+#           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+#           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+#           restore-keys: |
+#             ${{ runner.os }}-yarn-
 
-      - name: Install dependencies 👨🏻‍💻
-        run: yarn
+#       - name: Install dependencies 👨🏻‍💻
+#         run: yarn
 
-      - name: Run linter 👀
-        run: yarn lint
+#       - name: Run linter 👀
+#         run: yarn lint
 
-      - name: Run tests 🧪
-        run: yarn test
+#       - name: Run tests 🧪
+#         run: yarn test
+
+#   docker: 
+#     runs-on: ubuntu-latest
+#     steps: 
+#     -
+#       name: Login to Docker Registry
+#       uses: docker/login-action@v2
+#       with: 
+#         registry: ${{ secrets.DOCKER_REGISTRY_NAME}}
+#         username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
+#         password: ${{ secrets.DOCKER_REGISTRY_TOKEN }}
+
+#     -
+#       name: Push on Docker Registry
+#       uses: docker/build-push-action@v3
+#       with: 
+#         push: true
+#         tags: user/zuum:${{ github.run_number }}
+
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#     -
+#       name: Checkout Charts repository
+#       uses: docker/checkout@master
+#       with: 
+#         repository: ${{secrets.HELM_CHART_REPO}}
+    
+#     - 
+#       shell: bash
+#       run: |
+#         git config --global user.name 'GH Actions'
+#         git config --global user.email 'ghactions@users.noreply.github.com'
+#         cd helm-charts/zuum
+#         sed -i "/appVersion/c\appVersion : ${{ github.run_number }}" values.yaml
+#         git add . 
+#         git commit -m "Image version update ${{ github.run_number }}"
+#         git push origin main

@@ -46,6 +46,10 @@ export default {
     'cookie-universal-nuxt',
     ],
 
+  router: {
+    middleware: ['auth']
+  },
+
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
@@ -83,7 +87,7 @@ export default {
         endpoints: {
           login: { url: '/auth/login', method: 'post', propertyName: 'token'},
           logout: { url: '/auth/logout', method: 'post' },
-          user: { url: '/auth/user', method: 'get', propertyName: 'user'},
+          user: false,
         }
       }
     }
