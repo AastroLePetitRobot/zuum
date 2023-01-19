@@ -6,7 +6,7 @@
 		<v-dialog v-model="dialog" persistent max-width="600px">
 			<template v-slot:activator="{ on, attrs }">
 				<v-btn color="primary" dark v-bind="attrs" v-on="on">
-					Open Dialog
+					Add file
 				</v-btn>
 			</template>
 			<v-card>
@@ -17,15 +17,18 @@
 					<v-container>
 						<v-row>
 							<v-col>
-								<v-text-field label="File display name" required></v-text-field>
+								<v-text-field label="File display name" v-model="fileDisplayName"
+									required></v-text-field>
 							</v-col>
 
-							<v-col>
-								<v-text-field label="File URL" required></v-text-field>
+							<v-col><v-select :items="this.filetypes" v-model="selectedFileType"></v-select></v-col>
+
+							<v-col v-if="selectedFileType == 'url'">
+								<v-text-field v-model="url" label="File URL" required></v-text-field>
 							</v-col>
 
-							<v-col>
-								<v-file-input label="File	"></v-file-input>
+							<v-col v-if="selectedFileType == 'file'">
+								<v-file-input v-model="file" label="File"></v-file-input>
 							</v-col>
 
 						</v-row>
@@ -36,7 +39,7 @@
 					<v-btn color="blue darken-1" text @click="dialog = false">
 						Close
 					</v-btn>
-					<v-btn color="blue darken-1" text @click="dialog = false">
+					<v-btn color="blue darken-1" text @click="addFile(); dialog = false">
 						Save
 					</v-btn>
 				</v-card-actions>
@@ -75,7 +78,11 @@ export default {
 		return {
 			items: [],
 			dialog: false,
-			file: []
+			fileDisplayName: 'New File',
+			url: '',
+			file: [],
+			filetypes: ['file', 'url'],
+			selectedFileType: 'url'
 		}
 	},
 
@@ -121,10 +128,26 @@ export default {
 
 		addFile() {
 			let formData = new FormData();
-			formData.append("displayName", this.displayName);
-			formData.append("file", files[0]);
-			formData.append()
+			console.log(this.file)
+			formData.append("displayName", this.fileDisplayName);
+			formData.append("fileType", this.selectedFileType);
+			formData.append("roomId", this.roomId);
 
+			if (this.selectedFileType == 'url') {
+				console.log(this.url)
+				formData.append('url', this.url)
+			}
+			else { formData.append("file", this.file); }
+
+
+			try {
+
+				this.$axios.post('rooms/items/add', formData).then(res =>
+					socket.emit("refresh", {roomId: this.roomId })
+				);
+			} catch (error) {
+				console.log(error)
+			}
 		},
 
 		openFile(url) {
@@ -143,7 +166,7 @@ export default {
 					newList: this.items
 				})
 					.then(response => {
-						socket.emit("deleteFile", { roomId: this.roomId })
+						socket.emit("refresh", { roomId: this.roomId })
 					})
 			} catch (error) {
 				//console.log(error);
