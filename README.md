@@ -1,5 +1,9 @@
 # zuum
 
+Zuum est un projet réalisé dans le cadre de notre projet d'Ingénierie LOGicielle en année de M2 à l'IMT Nord Europe.
+
+Ce projet a pour vocation la création d'un application web permettant l'upload de fichiers sous forme d'URL ou de fichiers au sein d'espaces de travail (référencés sous le terme de Rooms par la suite) consultables par plusieurs utilisateurs 
+
 ## Build Setup
 
 ```bash
@@ -12,58 +16,61 @@ $ yarn dev
 # build for production and launch server
 $ yarn build
 $ yarn start
-
-# generate static project
-$ yarn generate
 ```
 
-For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).
+## Features attendues
 
-## Special Directories
+- Un utilisateur de l'application ayant créé une salle virtuelle est un conférencier 
+- Une salle virtuelle est identifiée par un lien 
+- Le conférencier peut entrer dans une salle qu'il a créée :
+  - Pour préparer la conférence
+  - Pour l'ouvrir au public au moment de la conférence 
 
-You can create the following extra directories, some of which have special behaviors. Only `pages` is required; you can delete them if you don't want to use their functionality.
+- Le lien de la salle virtuelle est diffusé au public de la conférence
+- Les utilisateurs présents dans une salle sont appelés membres ;
 
-### `assets`
+- Le conférencier peut entrer dans la salle virtuelle pour :
+  - préparer une liste d'urls à diffuser lors de la conférence 
+  - téléverser des documents dans la salle virtuelle 
 
-The assets directory contains your uncompiled assets such as Stylus or Sass files, images, or fonts.
+- Chaque page de document téléversé insère une url dans la liste ;
+- Des urls externes peuvent aussi être insérées dans la liste ;
+- L'ordre des urls dans la liste peut être modifié ;
+- Une url peut être dupliquée et déplacée pour apparaître plusieurs fois dans la liste.
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/assets).
+## Notre réalisation 
 
-### `components`
+Actuellement le projet comporte deux composantes majeures :
 
-The components directory contains your Vue.js components. Components make up the different parts of your page and can be reused and imported into your pages, layouts and even other components.
+- Un système d'authentification où il est possible de créer des comptes et de s'y connecter 
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/components).
+- Les "rooms" qui permettent de charger des documents sous la forme d'URL de fichiers
+  - Il est possible de supprimer des documents de la room
+  - Il est possible d'ouvrir des documents, lorsqu'un utilisateur ouvre un document, il est ouvert sur les navigateurs de tous les utilisateurs connectés à l'application
 
-### `layouts`
+## Les technologies utilisées 
 
-Layouts are a great help when you want to change the look and feel of your Nuxt app, whether you want to include a sidebar or have distinct layouts for mobile and desktop.
+Le projet utilise plusieurs technologies pour son bon fonctionnement : 
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/layouts).
+- Nuxt.js qui est un framework SPA qui permet la création rapide d'une application web ainsi que d'un serveur API dans le même projet pour gagner en efficacité. 
+
+- Socket.io qui est un package permettant l'implémentation de WebSockets qui sont critique à un fonctionnement synchrone de notre application. 
+
+- MongoDB, afin de stocker toutes les données afférentes aux utilisateurs ainsi qu'aux Rooms
+
+- Une version d'essai de l'application a été déployée sur un conteneur orchestré via Kubernetes
+
+- Docker afin de pouvoir lancer l'application sur un conteneur Docker sans avoir besoin de gérer des problèmes d'environnements / dépendences 
+
+- Github Actions afin de construire automatiquement les images Docker du projet et les mettre à disposition dans le cadre de déploiements continus.
+
+- Azure Storage, afin de stocker les documents sous forme de blob en ligne 
 
 
-### `pages`
+## Nos difficultés 
 
-This directory contains your application views and routes. Nuxt will read all the `*.vue` files inside this directory and setup Vue Router automatically.
+- Nous avons été un peu ambitieux sur l'usage des technologies pour faire fonctionner le site web, l'usage des Websockets et les subtilités associées (créer un serveur Websocker, créer des sous-divisions par espaces de travail pour les sockets) a nécéssité un temps conséquent d'apprentissage en plus du temps d'implémentation sur l'application finale, réduisant les possibilités pour développer toutes les features attendues sur le site.
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/get-started/routing).
+- La partie Websocket a notamment était compliquée à transcrire en TypeScript dû à un certain manque d'exemple et de documentation pour du TypeScript
 
-### `plugins`
-
-The plugins directory contains JavaScript plugins that you want to run before instantiating the root Vue.js Application. This is the place to add Vue plugins and to inject functions or constants. Every time you need to use `Vue.use()`, you should create a file in `plugins/` and add its path to plugins in `nuxt.config.js`.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/plugins).
-
-### `static`
-
-This directory contains your static files. Each file inside this directory is mapped to `/`.
-
-Example: `/static/robots.txt` is mapped as `/robots.txt`.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/static).
-
-### `store`
-
-This directory contains your Vuex store files. Creating a file in this directory automatically activates Vuex.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/store).
+- Ayant avancé sur le projet séparemment suite à des besoins d'entreprise / créneaux d'autoformation différents, nous avons eu des difficultés à rassembler nos travaux en un ensemble cohérent (notamment sur l'affectation de droit sur les rooms à différent types d'utilisateurs)

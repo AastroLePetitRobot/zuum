@@ -40,7 +40,15 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-  ],
+    '@nuxtjs/axios',
+    '@nuxtjs/auth-next',
+    '~/io',
+    'cookie-universal-nuxt',
+    ],
+
+  router: {
+    middleware: ['auth']
+  },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
@@ -60,8 +68,42 @@ export default {
       }
     }
   },
+  axios: {
+    baseURL: 'http://localhost:3000/api'
+  },
+  auth: {
+    strategies: {
+      local: {
+        token: {
+          property: 'token',
+          global: true,
+          // required: true,
+          type: ''
+        },
+        user: {
+          property: 'user',
+          // autoFetch: true
+        },
+        endpoints: {
+          login: { url: '/auth/login', method: 'post', propertyName: 'token'},
+          logout: { url: '/auth/logout', method: 'post' },
+          user: false,
+        }
+      }
+    }
+  },
+  
+  serverMiddleware: {
+    '/api': '~/api'
+  },
 
+  env: {
+    URL: 'http://localhost:3000'
+  },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    transpile: [
+      'defu'
+    ]
   }
 }
