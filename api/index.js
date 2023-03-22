@@ -5,7 +5,8 @@ var cookieParser = require('cookie-parser');
 
 const app = express()
 
-var multer = require('multer')
+
+app.use(express.static('public'))
 
 app.use(express.json({ limit: '100mb' }))
 app.use(express.urlencoded({ extended: false }))

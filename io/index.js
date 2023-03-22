@@ -28,7 +28,6 @@ export default function () {
 
       socket.on("loadFile", (args) => {
 
-
         let room = "room-"+args.roomId
 
 
@@ -36,6 +35,7 @@ export default function () {
       })
 
       socket.on("deleteFile", (args) => {
+
 
         let room = "room-"+args.roomId
 
