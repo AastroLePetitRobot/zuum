@@ -64,8 +64,13 @@ Le projet utilise plusieurs technologies pour son bon fonctionnement :
 
 - Github Actions afin de construire automatiquement les images Docker du projet et les mettre à disposition dans le cadre de déploiements continus.
 
+- Azure Storage, afin de stocker les documents sous forme de blob en ligne 
+
+
 ## Nos difficultés 
 
 - Nous avons été un peu ambitieux sur l'usage des technologies pour faire fonctionner le site web, l'usage des Websockets et les subtilités associées (créer un serveur Websocker, créer des sous-divisions par espaces de travail pour les sockets) a nécéssité un temps conséquent d'apprentissage en plus du temps d'implémentation sur l'application finale, réduisant les possibilités pour développer toutes les features attendues sur le site.
+
+- La partie Websocket a notamment était compliquée à transcrire en TypeScript dû à un certain manque d'exemple et de documentation pour du TypeScript
 
 - Ayant avancé sur le projet séparemment suite à des besoins d'entreprise / créneaux d'autoformation différents, nous avons eu des difficultés à rassembler nos travaux en un ensemble cohérent (notamment sur l'affectation de droit sur les rooms à différent types d'utilisateurs)
