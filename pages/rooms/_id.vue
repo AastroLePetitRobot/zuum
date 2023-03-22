@@ -87,6 +87,7 @@ export default {
 	},
 
 	created() {
+		console.log(this.$auth)
 		this.roomId = this.$route.params.id
 		console.log(this.roomId)
 		this.getDataFromApi();

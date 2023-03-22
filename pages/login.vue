@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <h1>Login</h1>
-        <AuthForm :submitForm="LoginUser"/>
+        <AuthForm :submitForm="LoginUser" />
     </v-container>
 </template>
 
@@ -11,15 +11,17 @@ export default {
     components: {
         AuthForm
     },
+
     methods: {
         LoginUser(loginInfo) {
             this.$auth.loginWith('local', {
                 data: {
                     email: loginInfo.email,
-                    password: loginInfo.password    
+                    password: loginInfo.password
                 }
+            }).then(response => {
+                console.log(response);
             });
-            console.log(loginInfo.email);
         }
     }
 

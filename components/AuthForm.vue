@@ -56,7 +56,7 @@ import AlertFormIncorrect from '@/components/AlertFormIncorrect.vue';
                 password: '',  
                 passwordRules: [
                     v => !!v || 'Password is required',
-                    v => (v && v.length >= 8) || 'Password must be more than 8 characters',
+                    v => (v && v.length >= 1) || 'Password must be more than 8 characters',
                 ],
         }),
 

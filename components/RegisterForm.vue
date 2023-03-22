@@ -48,8 +48,8 @@
             :disabled="!valid"
             color="success"
             class="mr-4"
-            @click="submitForm([name, email, password])"
-        >Login</v-btn>
+            @click="submitForm({name: name, email: email, password: password})"
+        >Register</v-btn>
         <v-btn 
         color="error" dark
         @click ="reset">
@@ -91,7 +91,7 @@ import { computed } from 'vue';
             reset() {
                 this.$refs.form.reset()
             },
-            login() {
+            register() {
                 if (this.$refs.form.validate()) {
                    
 
@@ -100,7 +100,13 @@ import { computed } from 'vue';
                 }   
             }   
         },
-
+        
+        props: {
+            submitForm: {
+                type: Function,
+                required: true
+            }
+        },
         computed: {
             passwordConfirmationRule() {
                 return () =>
